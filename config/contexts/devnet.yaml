@@ -113,7 +113,7 @@ context:
   operator_registrations: []
   # Release artifacts
   artifacts:
-    artifactId: sha256:f5d2b1e1f31ace824a4a2f4091811d61f4f63f2d8e59e56e1dd09b0aa637f338
+    artifactId: sha256:30de400cdcc13a4e4ebf6b806c95f982b5859df6ea46f59639d8509139341af0
     component: performer
     digest: ""
     registry_url: ""
