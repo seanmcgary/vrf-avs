@@ -35,3 +35,4 @@ config/contexts/**/*
 
 # Environment
 .env
+.idea
