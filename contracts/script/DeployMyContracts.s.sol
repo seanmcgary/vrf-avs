@@ -64,7 +64,7 @@ contract DeployMyContracts is Script {
         vm.stopBroadcast();
 
         // Write deployed contract addresses to output file
-        Output[] memory outputs = new Output[](2);
+        Output[] memory outputs = new Output[](1);
         outputs[0] = Output({name: "VRF", contractAddress: address(vrfContract)});
         _writeOutputToJson(environment, outputs);
     }

@@ -38,3 +38,4 @@ config/contexts/**/*
 .idea
 
 /contracts/outputs
+/pkg/vdf-ffi/target

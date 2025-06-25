@@ -1,0 +1,18 @@
+[package]
+name = "vdf-ffi"
+version = "0.1.0"
+authors = ["VRF AVS Team"]
+edition = "2021"
+description = "FFI bindings for VDF library for use with Go CGO"
+
+[lib]
+name = "vdf_ffi"
+crate-type = ["cdylib", "staticlib"]
+
+[dependencies]
+vdf = { path = "../../submodules/vdf/vdf" }
+classgroup = { path = "../../submodules/vdf/classgroup" }
+libc = "0.2"
+
+[build-dependencies]
+cbindgen = "0.24"

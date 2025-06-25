@@ -6,14 +6,14 @@ context:
   # Chains available to this context
   chains:
     l1:
-      chain_id: 31337
+      chain_id: 17000
       rpc_url: "http://localhost:8545"
       fork:
         block: 4017700
         url: "https://special-yolo-river.ethereum-holesky.quiknode.pro/2d21099a19e7c896a22b9fcc23dc8ce80f2214a5/"
         block_time: 3
     l2:
-      chain_id: 31337
+      chain_id: 17000
       rpc_url: "http://localhost:8545"
       fork:
         block: 4017700
@@ -106,14 +106,38 @@ context:
       bn254_certificate_verifier: "0xf462d03A82C1F3496B0DFe27E978318eD1720E1f"
       operator_table_updater: "0xd7230B89E5E2ed1FD068F0FF9198D7960243f12a"
   # Contracts deployed on `devnet start`
-  deployed_contracts: []
+  deployed_contracts:
+    - abi: .devkit/contracts/out/TaskMailbox.sol/TaskMailbox.json
+      address: 0x0c8A72d89AA40B71Ee5F430E89E1681f944DAAc0
+      name: taskMailbox
+    - abi: .devkit/contracts/out/TaskAVSRegistrar.sol/TaskAVSRegistrar.json
+      address: 0xC2100780F828810bAaeCD3039111006E12B26CF8
+      name: taskAVSRegistrar
+    - abi: .devkit/contracts/out/AVSTaskHook.sol/AVSTaskHook.json
+      address: 0x6b165dE91F825584117c23f79F634849aCff4f68
+      name: avsTaskHook
+    - abi: .devkit/contracts/out/VRF.sol/VRF.json
+      address: 0x69B9aE74db4e9dF49cBb925eb96f86B4904ab275
+      name: VRF
   # Operator Sets registered on `devnet start`
-  operator_sets: []
+  operator_sets:
+    - operator_set_id: 0
+      strategies:
+        - strategy: 0x5C8b55722f421556a2AAfb7A3EA63d4c3e514312
+    - operator_set_id: 1
+      strategies:
+        - strategy: 0x5C8b55722f421556a2AAfb7A3EA63d4c3e514312
   # Operators registered on `devnet start`
-  operator_registrations: []
+  operator_registrations:
+    - address: 0x90F79bf6EB2c4f870365E785982E1f101E93b906
+      operator_set_id: 0
+      payload: 0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000f61676772656761746f723a393030300000000000000000000000000000000000
+    - address: 0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65
+      operator_set_id: 1
+      payload: 0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000d6578656375746f723a3930393000000000000000000000000000000000000000
   # Release artifacts
   artifacts:
-    artifactId: sha256:30de400cdcc13a4e4ebf6b806c95f982b5859df6ea46f59639d8509139341af0
+    artifactId: sha256:b129e09e8391a6c41a2b7680b511da4e7319630fbcc92b0648c0d288d57e29f2
     component: performer
     digest: ""
     registry_url: ""

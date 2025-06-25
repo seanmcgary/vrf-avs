@@ -2,3 +2,6 @@
 	path = .devkit/contracts
 	url = https://github.com/Layr-Labs/hourglass-contracts-template
 	branch = master
+[submodule "submodules/vdf"]
+	path = submodules/vdf
+	url = https://github.com/poanetwork/vdf.git
