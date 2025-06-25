@@ -12,6 +12,7 @@ import {OperatorSet} from "@eigenlayer-contracts/src/contracts/libraries/Operato
 contract VRF {
     /// @notice Types of randomness generation supported
     enum RandomnessType {
+        UNKNOWN,
         VDF
     }
 
@@ -219,5 +220,57 @@ contract VRF {
      */
     function getRequestCounter() external view returns (uint256) {
         return requestCounter;
+    }
+
+    // View functions for testing and encoding
+    
+    /**
+     * @notice Encodes a TaskPayload for testing
+     * @param randomnessType The type of randomness
+     * @param randomnessParams The encoded parameters
+     * @return The encoded TaskPayload
+     */
+    function encodeTaskPayload(RandomnessType randomnessType, bytes calldata randomnessParams) 
+        external 
+        pure 
+        returns (bytes memory) 
+    {
+        TaskPayload memory payload = TaskPayload({
+            randomnessType: randomnessType,
+            randomnessParams: randomnessParams
+        });
+        return abi.encode(payload);
+    }
+
+    /**
+     * @notice Encodes VDFParams for testing
+     * @param seed The seed bytes
+     * @return The encoded VDFParams
+     */
+    function encodeVDFParams(bytes calldata seed) 
+        external 
+        pure 
+        returns (bytes memory) 
+    {
+        VDFParams memory params = VDFParams({seed: seed});
+        return abi.encode(params);
+    }
+
+    /**
+     * @notice Encodes a complete task payload with VDF params for testing
+     * @param seed The seed bytes
+     * @return The encoded TaskPayload with VDF parameters
+     */
+    function encodeVDFTaskPayload(bytes calldata seed) 
+        external 
+        pure 
+        returns (bytes memory) 
+    {
+        VDFParams memory vdfParams = VDFParams({seed: seed});
+        TaskPayload memory payload = TaskPayload({
+            randomnessType: RandomnessType.VDF,
+            randomnessParams: abi.encode(vdfParams)
+        });
+        return abi.encode(payload);
     }
 }

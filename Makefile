@@ -25,6 +25,7 @@ endif
 build: deps build-vdf
 	@mkdir -p $(OUT) || true
 	@echo "Building binaries..."
+	./scripts/compile-bindings.sh
 	go build -o $(OUT)/performer ./cmd/performer/main.go
 	go build -o $(OUT)/vrf-client ./cmd/client/main.go
 

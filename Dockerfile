@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     libgmp-dev \
     curl \
     pkg-config \
+    jq \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Rust toolchain
@@ -17,9 +18,9 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 # Copy full source
 ADD . /build
 
-# Set environment variables for GMP linking on Linux
-ENV LIBRARY_PATH="/usr/lib/x86_64-linux-gnu:/usr/lib"
-ENV CPATH="/usr/include"
+# Set environment variables for GMP linking on Linux (architecture-agnostic)
+ENV LIBRARY_PATH="/usr/lib:/usr/local/lib"
+ENV CPATH="/usr/include:/usr/local/include"
 
 RUN make build
 

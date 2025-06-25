@@ -6,10 +6,12 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/Layr-Labs/hourglass-monorepo/ponos/pkg/performer/server"
 	performerV1 "github.com/Layr-Labs/protocol-apis/gen/protos/eigenlayer/hourglass/v1/performer"
+	"github.com/ethereum/go-ethereum/accounts/abi"
 	"go.uber.org/zap"
 )
 
@@ -26,7 +28,8 @@ import (
 type RandomnessType uint8
 
 const (
-	VDF RandomnessType = 0
+	UNKNOWN RandomnessType = 0
+	VDF     RandomnessType = 1
 )
 
 // VDFParams contains parameters for VDF randomness generation
@@ -53,11 +56,11 @@ type TaskResponsePayload struct {
 
 // VRF-specific errors
 var (
-	ErrInvalidPayload      = errors.New("invalid task payload")
-	ErrUnsupportedType     = errors.New("unsupported randomness type")
-	ErrInvalidSeed         = errors.New("invalid seed parameters")
-	ErrVDFComputation      = errors.New("VDF computation failed")
-	ErrEncodingFailed      = errors.New("encoding failed")
+	ErrInvalidPayload  = errors.New("invalid task payload")
+	ErrUnsupportedType = errors.New("unsupported randomness type")
+	ErrInvalidSeed     = errors.New("invalid seed parameters")
+	ErrVDFComputation  = errors.New("VDF computation failed")
+	ErrEncodingFailed  = errors.New("encoding failed")
 )
 
 type TaskWorker struct {
@@ -71,7 +74,7 @@ func NewTaskWorker(logger *zap.Logger) *TaskWorker {
 }
 
 func (tw *TaskWorker) ValidateTask(t *performerV1.TaskRequest) error {
-	tw.logger.Sugar().Infow("Validating VRF task", 
+	tw.logger.Sugar().Infow("Validating VRF task",
 		zap.String("taskId", string(t.TaskId)),
 		zap.Int("payloadLength", len(t.Payload)),
 	)
@@ -83,10 +86,11 @@ func (tw *TaskWorker) ValidateTask(t *performerV1.TaskRequest) error {
 		return fmt.Errorf("%w: %v", ErrInvalidPayload, err)
 	}
 
-	// Validate randomness type
-	if taskPayload.RandomnessType != VDF {
-		tw.logger.Sugar().Errorw("Unsupported randomness type", 
-			"type", taskPayload.RandomnessType)
+	// Validate randomness type - support both old (0) and new (1) VDF values for backward compatibility
+	if taskPayload.RandomnessType != VDF && taskPayload.RandomnessType != RandomnessType(0) {
+		tw.logger.Sugar().Errorw("Unsupported randomness type",
+			zap.Uint8("type", uint8(taskPayload.RandomnessType)),
+		)
 		return ErrUnsupportedType
 	}
 
@@ -182,54 +186,122 @@ func (tw *TaskWorker) HandleTask(t *performerV1.TaskRequest) (*performerV1.TaskR
 
 // Helper functions for encoding/decoding and VDF computation
 
-// decodeTaskPayload decodes the task payload from bytes
+// decodeTaskPayload decodes the task payload from bytes using proper ABI decoding
 func (tw *TaskWorker) decodeTaskPayload(payload []byte) (*TaskPayload, error) {
-	if len(payload) < 64 { // Minimum size for ABI encoding
-		return nil, errors.New("payload too short")
+	// Define ABI type for TaskPayload struct: (uint8, bytes)
+	tupleType, err := abi.NewType("tuple", "", []abi.ArgumentMarshaling{
+		{Name: "randomnessType", Type: "uint8"},
+		{Name: "randomnessParams", Type: "bytes"},
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to create tuple type: %v", err)
 	}
 
-	// For now, we'll use a simple binary encoding since we don't have full ABI support
-	// In a production system, you'd use proper ABI decoding
-	
-	// Extract randomness type (first 32 bytes as uint256, but we only use first byte)
-	randomnessType := RandomnessType(payload[31])
-	
-	// Extract params length (next 32 bytes)
-	if len(payload) < 96 {
-		return nil, errors.New("payload missing params length")
+	taskPayloadArgs := abi.Arguments{
+		{Type: tupleType},
 	}
-	
-	paramsLength := binary.BigEndian.Uint64(payload[88:96])
-	if len(payload) < int(96+paramsLength) {
-		return nil, errors.New("payload shorter than expected params length")
+
+	// Decode the payload
+	decoded, err := taskPayloadArgs.Unpack(payload)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode TaskPayload: %v", err)
 	}
-	
-	// Extract params
-	randomnessParams := make([]byte, paramsLength)
-	copy(randomnessParams, payload[96:96+paramsLength])
+
+	if len(decoded) != 1 {
+		return nil, errors.New("invalid TaskPayload structure")
+	}
+
+	// ABI unpacking returns a struct with named fields
+	// The type is: struct { RandomnessType uint8; RandomnessParams []uint8 }
+	tupleStruct := decoded[0]
+
+	// Use reflection to extract the struct fields
+	structValue := reflect.ValueOf(tupleStruct)
+	if structValue.Kind() != reflect.Struct {
+		return nil, fmt.Errorf("expected struct, got %T", decoded[0])
+	}
+
+	// Extract RandomnessType field
+	randomnessTypeField := structValue.FieldByName("RandomnessType")
+	if !randomnessTypeField.IsValid() {
+		return nil, errors.New("missing RandomnessType field")
+	}
+	randomnessType := uint8(randomnessTypeField.Uint())
+
+	// Extract RandomnessParams field  
+	randomnessParamsField := structValue.FieldByName("RandomnessParams")
+	if !randomnessParamsField.IsValid() {
+		return nil, errors.New("missing RandomnessParams field")
+	}
+
+	// Convert []uint8 to []byte
+	var randomnessParams []byte
+	if randomnessParamsField.Kind() == reflect.Slice {
+		slice := randomnessParamsField.Interface().([]uint8)
+		randomnessParams = make([]byte, len(slice))
+		for i, v := range slice {
+			randomnessParams[i] = byte(v)
+		}
+	} else {
+		return nil, errors.New("invalid RandomnessParams field type")
+	}
 
 	return &TaskPayload{
-		RandomnessType:   randomnessType,
+		RandomnessType:   RandomnessType(randomnessType),
 		RandomnessParams: randomnessParams,
 	}, nil
 }
 
-// decodeVDFParams decodes VDF parameters from the encoded bytes
+// decodeVDFParams decodes VDF parameters from the encoded bytes using ABI
 func (tw *TaskWorker) decodeVDFParams(paramsBytes []byte) (*VDFParams, error) {
-	if len(paramsBytes) < 32 { // Minimum for seed length
-		return nil, errors.New("VDF params too short")
+	// Define ABI type for VDFParams struct: (bytes)
+	tupleType, err := abi.NewType("tuple", "", []abi.ArgumentMarshaling{
+		{Name: "seed", Type: "bytes"},
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to create VDFParams tuple type: %v", err)
 	}
 
-	// Extract seed length (first 32 bytes as uint256)
-	seedLength := binary.BigEndian.Uint64(paramsBytes[24:32])
-	if len(paramsBytes) < int(32+seedLength) {
-		return nil, errors.New("VDF params shorter than expected seed length")
+	vdfParamsArgs := abi.Arguments{
+		{Type: tupleType},
 	}
 
-	// Extract seed
-	seed := make([]byte, seedLength)
-	if seedLength > 0 {
-		copy(seed, paramsBytes[32:32+seedLength])
+	// Decode the params
+	decoded, err := vdfParamsArgs.Unpack(paramsBytes)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode VDFParams: %v", err)
+	}
+
+	if len(decoded) != 1 {
+		return nil, errors.New("invalid VDFParams structure")
+	}
+
+	// ABI unpacking returns a struct with named fields
+	// The type is: struct { Seed []uint8 }
+	tupleStruct := decoded[0]
+
+	// Use reflection to extract the struct fields
+	structValue := reflect.ValueOf(tupleStruct)
+	if structValue.Kind() != reflect.Struct {
+		return nil, fmt.Errorf("expected struct, got %T", decoded[0])
+	}
+
+	// Extract Seed field
+	seedField := structValue.FieldByName("Seed")
+	if !seedField.IsValid() {
+		return nil, errors.New("missing Seed field")
+	}
+
+	// Convert []uint8 to []byte
+	var seed []byte
+	if seedField.Kind() == reflect.Slice {
+		slice := seedField.Interface().([]uint8)
+		seed = make([]byte, len(slice))
+		for i, v := range slice {
+			seed[i] = byte(v)
+		}
+	} else {
+		return nil, errors.New("invalid Seed field type")
 	}
 
 	return &VDFParams{
@@ -276,22 +348,22 @@ func (tw *TaskWorker) encodeVDFResult(result *VDFResult) ([]byte, error) {
 func (tw *TaskWorker) encodeTaskResponsePayload(payload TaskResponsePayload) ([]byte, error) {
 	// Simple binary encoding matching our decoding logic
 	// In production, use proper ABI encoding
-	
+
 	result := make([]byte, 0, 96+len(payload.RandomValue))
-	
+
 	// Encode randomness type as uint256 (32 bytes)
 	typeBytes := make([]byte, 32)
 	typeBytes[31] = byte(payload.RandomnessType)
 	result = append(result, typeBytes...)
-	
+
 	// Encode random value length as uint256 (32 bytes)
 	lengthBytes := make([]byte, 32)
 	binary.BigEndian.PutUint64(lengthBytes[24:32], uint64(len(payload.RandomValue)))
 	result = append(result, lengthBytes...)
-	
+
 	// Encode random value
 	result = append(result, payload.RandomValue...)
-	
+
 	return result, nil
 }
 
