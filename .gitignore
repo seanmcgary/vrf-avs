@@ -36,3 +36,5 @@ config/contexts/**/*
 # Environment
 .env
 .idea
+
+/contracts/outputs

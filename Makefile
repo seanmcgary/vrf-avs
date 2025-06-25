@@ -23,3 +23,6 @@ build/container:
 
 test:
 	go test ./... -v -p 1
+
+test-contracts:
+	cd .devkit/contracts && forge test

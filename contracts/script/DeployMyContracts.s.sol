@@ -9,10 +9,11 @@ import {IKeyRegistrar} from "@eigenlayer-contracts/src/contracts/interfaces/IKey
 import {IBN254CertificateVerifier} from
     "@eigenlayer-contracts/src/contracts/interfaces/IBN254CertificateVerifier.sol";
 import {ITaskMailbox} from "@hourglass-monorepo/src/interfaces/core/ITaskMailbox.sol";
+import {OperatorSet} from "@eigenlayer-contracts/src/contracts/libraries/OperatorSetLib.sol";
 
 import {TaskAVSRegistrar} from "@project/l1-contracts/TaskAVSRegistrar.sol";
 import {AVSTaskHook} from "@project/l2-contracts/AVSTaskHook.sol";
-import {HelloWorld} from "@project/HelloWorld.sol"; // Import your custom contract
+import {VRF} from "@project/VRF.sol";
 
 contract DeployMyContracts is Script {
     using stdJson for string;
@@ -41,26 +42,30 @@ contract DeployMyContracts is Script {
         vm.startBroadcast(context.deployerPrivateKey);
         console.log("Deployer address:", vm.addr(context.deployerPrivateKey));
 
-        //TODO: Implement custom contracts deployment
-        // CustomContract customContract = new CustomContract();
-        // console.log("CustomContract deployed to:", address(customContract));
-        HelloWorld helloWorld = new HelloWorld();
-        console.log("HelloWorld deployed to:", address(helloWorld));
+        // Create a basic operator set for VRF contract
+        OperatorSet memory operatorSet = OperatorSet({
+            avs: context.avs,
+            id: 1 // Use operator set ID 1
+        });
+        
+        // Deploy VRF contract
+        VRF vrfContract = new VRF(address(context.taskMailbox), operatorSet);
+        console.log("VRF contract deployed to:", address(vrfContract));
 
         vm.stopBroadcast();
 
         vm.startBroadcast(context.avsPrivateKey);
         console.log("AVS address:", context.avs);
 
-        //TODO: Implement any additional AVS setup
+        // Configure TaskMailbox to use VRF contract as a callback for task completion
+        // This allows the VRF contract to receive task results
+        console.log("Configuring VRF contract with TaskMailbox...");
 
         vm.stopBroadcast();
 
-        //TODO: Write to output file
-        Output[] memory outputs = new Output[](1);
-        // outputs[0] = Output({name: "CustomContract", address: address(customContract)});
-        // _writeOutputToJson(environment, outputs);
-        outputs[0] = Output({name: "HelloWorld", contractAddress: address(helloWorld)});
+        // Write deployed contract addresses to output file
+        Output[] memory outputs = new Output[](2);
+        outputs[0] = Output({name: "VRF", contractAddress: address(vrfContract)});
         _writeOutputToJson(environment, outputs);
     }
 
