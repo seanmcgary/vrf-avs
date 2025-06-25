@@ -10,6 +10,7 @@ import {IBN254CertificateVerifier} from
     "@eigenlayer-contracts/src/contracts/interfaces/IBN254CertificateVerifier.sol";
 import {ITaskMailbox} from "@hourglass-monorepo/src/interfaces/core/ITaskMailbox.sol";
 import {OperatorSet} from "@eigenlayer-contracts/src/contracts/libraries/OperatorSetLib.sol";
+import {IAVSTaskHook} from "@hourglass-monorepo/src/interfaces/avs/l2/IAVSTaskHook.sol";
 
 import {TaskAVSRegistrar} from "@project/l1-contracts/TaskAVSRegistrar.sol";
 import {AVSTaskHook} from "@project/l2-contracts/AVSTaskHook.sol";
@@ -57,9 +58,24 @@ contract DeployMyContracts is Script {
         vm.startBroadcast(context.avsPrivateKey);
         console.log("AVS address:", context.avs);
 
-        // Configure TaskMailbox to use VRF contract as a callback for task completion
-        // This allows the VRF contract to receive task results
-        console.log("Configuring VRF contract with TaskMailbox...");
+        // Configure TaskMailbox to use VRF contract as the task hook
+        // This allows the VRF contract to validate and receive task results
+        console.log("Configuring VRF contract as task hook in TaskMailbox...");
+        
+        // Read current executor operator set task config
+        ITaskMailbox.ExecutorOperatorSetTaskConfig memory currentConfig = 
+            context.taskMailbox.getExecutorOperatorSetTaskConfig(operatorSet);
+        
+        console.log("Current task hook:", address(currentConfig.taskHook));
+        console.log("Setting new task hook to VRF contract:", address(vrfContract));
+        
+        // Update the config to use our VRF contract as the task hook
+        currentConfig.taskHook = IAVSTaskHook(address(vrfContract));
+        
+        // Write the updated config back to TaskMailbox
+        context.taskMailbox.setExecutorOperatorSetTaskConfig(operatorSet, currentConfig);
+        
+        console.log("Successfully configured VRF contract as task hook");
 
         vm.stopBroadcast();
 

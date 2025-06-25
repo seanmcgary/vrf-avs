@@ -411,3 +411,108 @@ func createProperABIPayload(t *testing.T, seed []byte, randomnessType Randomness
 	
 	return payload
 }
+
+func TestIAVSTaskHookImplementation(t *testing.T) {
+	// Set up a simulated backend for testing
+	key, _ := crypto.GenerateKey()
+	auth, _ := bind.NewKeyedTransactorWithChainID(key, big.NewInt(1337))
+	alloc := make(core.GenesisAlloc)
+	alloc[auth.From] = core.GenesisAccount{Balance: big.NewInt(1000000000000000000)}
+	backend := backends.NewSimulatedBackend(alloc, 10000000)
+	
+	// Deploy the VRF contract
+	mockOperatorSet := VRF.OperatorSet{
+		Avs: auth.From,
+		Id:  uint32(1),
+	}
+	
+	_, _, contract, err := VRF.DeployVRF(auth, backend, auth.From, mockOperatorSet)
+	if err != nil {
+		t.Fatalf("Failed to deploy VRF contract: %v", err)
+	}
+	backend.Commit()
+	
+	t.Run("DecodeAndValidateTaskPayload_Valid", func(t *testing.T) {
+		// Create a valid VDF task payload
+		callOpts := &bind.CallOpts{}
+		seed := []byte("test-seed")
+		payload, err := contract.EncodeVDFTaskPayload(callOpts, seed)
+		if err != nil {
+			t.Fatalf("Failed to encode VDF task payload: %v", err)
+		}
+		
+		// Test the validation function - should not revert
+		_, err = contract.DecodeAndValidateTaskPayload(callOpts, payload)
+		if err != nil {
+			t.Errorf("DecodeAndValidateTaskPayload failed for valid payload: %v", err)
+		}
+	})
+	
+	t.Run("DecodeAndValidateTaskPayload_InvalidRandomnessType", func(t *testing.T) {
+		// Create a payload with invalid randomness type
+		callOpts := &bind.CallOpts{}
+		
+		// Encode params with invalid type (255)
+		invalidParams, err := contract.EncodeVDFParams(callOpts, []byte("test"))
+		if err != nil {
+			t.Fatalf("Failed to encode VDF params: %v", err)
+		}
+		
+		payload, err := contract.EncodeTaskPayload(callOpts, 255, invalidParams)
+		if err != nil {
+			t.Fatalf("Failed to encode task payload: %v", err)
+		}
+		
+		// Test the validation function - should revert
+		_, err = contract.DecodeAndValidateTaskPayload(callOpts, payload)
+		if err == nil {
+			t.Error("DecodeAndValidateTaskPayload should have failed for invalid randomness type")
+		}
+	})
+	
+	t.Run("DecodeAndValidateTaskPayload_EmptySeed", func(t *testing.T) {
+		// Create a VDF payload with empty seed
+		callOpts := &bind.CallOpts{}
+		
+		vdfParams, err := contract.EncodeVDFParams(callOpts, []byte{})
+		if err != nil {
+			t.Fatalf("Failed to encode VDF params: %v", err)
+		}
+		
+		payload, err := contract.EncodeTaskPayload(callOpts, 1, vdfParams) // VDF = 1
+		if err != nil {
+			t.Fatalf("Failed to encode task payload: %v", err)
+		}
+		
+		// Test the validation function - should revert for empty seed
+		_, err = contract.DecodeAndValidateTaskPayload(callOpts, payload)
+		if err == nil {
+			t.Error("DecodeAndValidateTaskPayload should have failed for empty seed")
+		}
+	})
+	
+	t.Run("DecodeAndValidateTaskPayload_SeedTooLong", func(t *testing.T) {
+		// Create a VDF payload with oversized seed
+		callOpts := &bind.CallOpts{}
+		largeSeed := make([]byte, 1025) // Exceeds 1024 byte limit
+		for i := range largeSeed {
+			largeSeed[i] = byte(i % 256)
+		}
+		
+		vdfParams, err := contract.EncodeVDFParams(callOpts, largeSeed)
+		if err != nil {
+			t.Fatalf("Failed to encode VDF params: %v", err)
+		}
+		
+		payload, err := contract.EncodeTaskPayload(callOpts, 1, vdfParams) // VDF = 1
+		if err != nil {
+			t.Fatalf("Failed to encode task payload: %v", err)
+		}
+		
+		// Test the validation function - should revert for oversized seed
+		_, err = contract.DecodeAndValidateTaskPayload(callOpts, payload)
+		if err == nil {
+			t.Error("DecodeAndValidateTaskPayload should have failed for oversized seed")
+		}
+	})
+}

@@ -21,15 +21,13 @@ contract VRFTest is Test {
     
     // Test events
     event RandomnessRequested(
-        uint256 indexed requestId,
+        bytes32 indexed requestId,
         address indexed requester,
-        bytes32 indexed taskHash,
         bytes seed
     );
     
     event RandomnessFulfilled(
-        uint256 indexed requestId,
-        bytes32 indexed taskHash,
+        bytes32 indexed requestId,
         uint256 result
     );
 
@@ -60,25 +58,21 @@ contract VRFTest is Test {
         
         // Expect the RandomnessRequested event
         vm.expectEmit(true, true, true, true);
-        emit RandomnessRequested(1, user, expectedTaskHash, seed);
+        emit RandomnessRequested(expectedTaskHash, user, seed);
         
         // Request randomness as user
         vm.prank(user);
-        uint256 requestId = vrfContract.requestRandomness(seed);
+        bytes32 requestId = vrfContract.requestRandomness(seed);
         
-        // Verify request ID
-        assertEq(requestId, 1);
+        // Verify request ID is the task hash
+        assertEq(requestId, expectedTaskHash);
         
         // Verify request details
         VRF.RandomnessRequest memory request = vrfContract.getRequest(requestId);
         assertEq(request.requester, user);
-        assertEq(request.taskHash, expectedTaskHash);
         assertEq(request.blockNumber, block.number);
         assertFalse(request.fulfilled);
         assertEq(request.result, 0);
-        
-        // Verify request counter
-        assertEq(vrfContract.getRequestCounter(), 1);
     }
 
     function testMultipleRequests() public {
@@ -95,7 +89,7 @@ contract VRFTest is Test {
         );
         
         vm.prank(user);
-        uint256 requestId1 = vrfContract.requestRandomness(seed1);
+        bytes32 requestId1 = vrfContract.requestRandomness(seed1);
         
         vm.mockCall(
             mockTaskMailbox,
@@ -104,11 +98,10 @@ contract VRFTest is Test {
         );
         
         vm.prank(user);
-        uint256 requestId2 = vrfContract.requestRandomness(seed2);
+        bytes32 requestId2 = vrfContract.requestRandomness(seed2);
         
-        assertEq(requestId1, 1);
-        assertEq(requestId2, 2);
-        assertEq(vrfContract.getRequestCounter(), 2);
+        assertEq(requestId1, taskHash1);
+        assertEq(requestId2, taskHash2);
     }
 
     function testOnTaskCompleted() public {
@@ -124,7 +117,7 @@ contract VRFTest is Test {
         );
         
         vm.prank(user);
-        uint256 requestId = vrfContract.requestRandomness(seed);
+        bytes32 requestId = vrfContract.requestRandomness(seed);
         
         // Prepare task response
         VRF.VDFResult memory vdfResult = VRF.VDFResult({result: expectedResult});
@@ -136,7 +129,7 @@ contract VRFTest is Test {
         
         // Expect the RandomnessFulfilled event
         vm.expectEmit(true, true, true, true);
-        emit RandomnessFulfilled(requestId, taskHash, expectedResult);
+        emit RandomnessFulfilled(requestId, expectedResult);
         
         // Call onTaskCompleted as TaskMailbox
         vm.prank(mockTaskMailbox);
@@ -184,7 +177,7 @@ contract VRFTest is Test {
         );
         
         vm.prank(user);
-        vrfContract.requestRandomness(seed);
+        bytes32 requestId = vrfContract.requestRandomness(seed);
         
         VRF.VDFResult memory vdfResult = VRF.VDFResult({result: result});
         VRF.TaskResponsePayload memory responsePayload = VRF.TaskResponsePayload({
@@ -213,7 +206,7 @@ contract VRFTest is Test {
         );
         
         vm.prank(user);
-        vrfContract.requestRandomness(seed);
+        bytes32 requestId = vrfContract.requestRandomness(seed);
         
         // Create response with invalid randomness type - we'll use abi.encode with wrong data
         // Since we can't cast invalid enum values, we'll create malformed data
@@ -250,7 +243,7 @@ contract VRFTest is Test {
         );
         
         vm.prank(user);
-        uint256 requestId = vrfContract.requestRandomness(seed);
+        bytes32 requestId = vrfContract.requestRandomness(seed);
         
         (bool fulfilled, uint256 result) = vrfContract.getRandomnessResult(requestId);
         assertFalse(fulfilled);
@@ -275,7 +268,7 @@ contract VRFTest is Test {
         );
         
         vm.prank(user);
-        vrfContract.requestRandomness(seed);
+        bytes32 requestId = vrfContract.requestRandomness(seed);
         
         // Verify the payload structure can be decoded correctly
         bytes memory encodedExpected = abi.encode(expectedPayload);

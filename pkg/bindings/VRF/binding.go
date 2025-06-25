@@ -29,6 +29,40 @@ var (
 	_ = abi.ConvertType
 )
 
+// BN254G1Point is an auto generated low-level Go binding around an user-defined struct.
+type BN254G1Point struct {
+	X *big.Int
+	Y *big.Int
+}
+
+// BN254G2Point is an auto generated low-level Go binding around an user-defined struct.
+type BN254G2Point struct {
+	X [2]*big.Int
+	Y [2]*big.Int
+}
+
+// IBN254CertificateVerifierTypesBN254Certificate is an auto generated low-level Go binding around an user-defined struct.
+type IBN254CertificateVerifierTypesBN254Certificate struct {
+	ReferenceTimestamp uint32
+	MessageHash        [32]byte
+	Signature          BN254G1Point
+	Apk                BN254G2Point
+	NonSignerWitnesses []IBN254CertificateVerifierTypesBN254OperatorInfoWitness
+}
+
+// IBN254CertificateVerifierTypesBN254OperatorInfoWitness is an auto generated low-level Go binding around an user-defined struct.
+type IBN254CertificateVerifierTypesBN254OperatorInfoWitness struct {
+	OperatorIndex     uint32
+	OperatorInfoProof []byte
+	OperatorInfo      IBN254TableCalculatorTypesBN254OperatorInfo
+}
+
+// IBN254TableCalculatorTypesBN254OperatorInfo is an auto generated low-level Go binding around an user-defined struct.
+type IBN254TableCalculatorTypesBN254OperatorInfo struct {
+	Pubkey  BN254G1Point
+	Weights []*big.Int
+}
+
 // OperatorSet is an auto generated low-level Go binding around an user-defined struct.
 type OperatorSet struct {
 	Avs common.Address
@@ -38,7 +72,6 @@ type OperatorSet struct {
 // VRFRandomnessRequest is an auto generated low-level Go binding around an user-defined struct.
 type VRFRandomnessRequest struct {
 	Requester   common.Address
-	TaskHash    [32]byte
 	BlockNumber *big.Int
 	Fulfilled   bool
 	Result      *big.Int
@@ -46,8 +79,8 @@ type VRFRandomnessRequest struct {
 
 // VRFMetaData contains all meta data concerning the VRF contract.
 var VRFMetaData = &bind.MetaData{
-	ABI: "[{\"type\":\"constructor\",\"inputs\":[{\"name\":\"_taskMailbox\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"_executorOperatorSet\",\"type\":\"tuple\",\"internalType\":\"structOperatorSet\",\"components\":[{\"name\":\"avs\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"id\",\"type\":\"uint32\",\"internalType\":\"uint32\"}]}],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"encodeTaskPayload\",\"inputs\":[{\"name\":\"randomnessType\",\"type\":\"uint8\",\"internalType\":\"enumVRF.RandomnessType\"},{\"name\":\"randomnessParams\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"outputs\":[{\"name\":\"\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"stateMutability\":\"pure\"},{\"type\":\"function\",\"name\":\"encodeVDFParams\",\"inputs\":[{\"name\":\"seed\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"outputs\":[{\"name\":\"\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"stateMutability\":\"pure\"},{\"type\":\"function\",\"name\":\"encodeVDFTaskPayload\",\"inputs\":[{\"name\":\"seed\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"outputs\":[{\"name\":\"\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"stateMutability\":\"pure\"},{\"type\":\"function\",\"name\":\"executorOperatorSet\",\"inputs\":[],\"outputs\":[{\"name\":\"avs\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"id\",\"type\":\"uint32\",\"internalType\":\"uint32\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"getRandomnessResult\",\"inputs\":[{\"name\":\"requestId\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"outputs\":[{\"name\":\"fulfilled\",\"type\":\"bool\",\"internalType\":\"bool\"},{\"name\":\"result\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"getRequest\",\"inputs\":[{\"name\":\"requestId\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"outputs\":[{\"name\":\"request\",\"type\":\"tuple\",\"internalType\":\"structVRF.RandomnessRequest\",\"components\":[{\"name\":\"requester\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"taskHash\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"},{\"name\":\"blockNumber\",\"type\":\"uint256\",\"internalType\":\"uint256\"},{\"name\":\"fulfilled\",\"type\":\"bool\",\"internalType\":\"bool\"},{\"name\":\"result\",\"type\":\"uint256\",\"internalType\":\"uint256\"}]}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"getRequestCounter\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"onTaskCompleted\",\"inputs\":[{\"name\":\"taskHash\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"},{\"name\":\"result\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"requestRandomness\",\"inputs\":[{\"name\":\"seed\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"outputs\":[{\"name\":\"requestId\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"requests\",\"inputs\":[{\"name\":\"\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"outputs\":[{\"name\":\"requester\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"taskHash\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"},{\"name\":\"blockNumber\",\"type\":\"uint256\",\"internalType\":\"uint256\"},{\"name\":\"fulfilled\",\"type\":\"bool\",\"internalType\":\"bool\"},{\"name\":\"result\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"taskHashToRequestId\",\"inputs\":[{\"name\":\"\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"}],\"outputs\":[{\"name\":\"\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"taskMailbox\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"contractITaskMailbox\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"updateOperatorSet\",\"inputs\":[{\"name\":\"_executorOperatorSet\",\"type\":\"tuple\",\"internalType\":\"structOperatorSet\",\"components\":[{\"name\":\"avs\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"id\",\"type\":\"uint32\",\"internalType\":\"uint32\"}]}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"event\",\"name\":\"RandomnessFulfilled\",\"inputs\":[{\"name\":\"requestId\",\"type\":\"uint256\",\"indexed\":true,\"internalType\":\"uint256\"},{\"name\":\"taskHash\",\"type\":\"bytes32\",\"indexed\":true,\"internalType\":\"bytes32\"},{\"name\":\"result\",\"type\":\"uint256\",\"indexed\":false,\"internalType\":\"uint256\"}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"RandomnessRequested\",\"inputs\":[{\"name\":\"requestId\",\"type\":\"uint256\",\"indexed\":true,\"internalType\":\"uint256\"},{\"name\":\"requester\",\"type\":\"address\",\"indexed\":true,\"internalType\":\"address\"},{\"name\":\"taskHash\",\"type\":\"bytes32\",\"indexed\":true,\"internalType\":\"bytes32\"},{\"name\":\"seed\",\"type\":\"bytes\",\"indexed\":false,\"internalType\":\"bytes\"}],\"anonymous\":false},{\"type\":\"error\",\"name\":\"InvalidTaskResponse\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"RequestAlreadyFulfilled\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"RequestNotFound\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"UnauthorizedCaller\",\"inputs\":[]}]",
-	Bin: "0x60a060405234801561000f575f5ffd5b50604051610fa0380380610fa083398101604081905261002e91610087565b6001600160a01b0391821660805280515f805460209093015163ffffffff16600160a01b026001600160c01b0319909316919093161717905561011b565b80516001600160a01b0381168114610082575f5ffd5b919050565b5f5f8284036060811215610099575f5ffd5b6100a28461006c565b92506040601f19820112156100b5575f5ffd5b50604080519081016001600160401b03811182821017156100e457634e487b7160e01b5f52604160045260245ffd5b6040526100f36020850161006c565b8152604084015163ffffffff8116811461010b575f5ffd5b6020820152919491935090915050565b608051610e5f6101415f395f8181610355015281816103ad01526107b70152610e5f5ff3fe608060405234801561000f575f5ffd5b50600436106100cb575f3560e01c8063ac8d073811610088578063e6dee7ed11610063578063e6dee7ed146102f5578063e7a923bb14610308578063f42a9e1314610350578063fdd154dc1461038f575f5ffd5b8063ac8d073814610267578063c58343ef14610287578063cdae4940146102e2575f5ffd5b80630944a904146100cf57806315505f8c146100e45780632026a4f3146101165780636a36dab91461015b57806381d12c58146101df578063a2785f0b1461025f575b5f5ffd5b6100e26100dd3660046109d6565b6103a2565b005b6101036100f2366004610a1e565b60036020525f908152604090205481565b6040519081526020015b60405180910390f35b5f54610137906001600160a01b03811690600160a01b900463ffffffff1682565b604080516001600160a01b03909316835263ffffffff90911660208301520161010d565b6101c8610169366004610a1e565b5f90815260026020818152604092839020835160a08101855281546001600160a01b031681526001820154928101929092529182015492810192909252600381015460ff16151560608301819052600490910154608090920182905291565b60408051921515835260208301919091520161010d565b61022b6101ed366004610a1e565b600260208190525f9182526040909120805460018201549282015460038301546004909301546001600160a01b039092169392909160ff9091169085565b604080516001600160a01b03909616865260208601949094529284019190915215156060830152608082015260a00161010d565b600154610103565b61027a610275366004610a35565b610509565b60405161010d9190610aa2565b61029a610295366004610a1e565b6105ad565b60405161010d919081516001600160a01b0316815260208083015190820152604080830151908201526060808301511515908201526080918201519181019190915260a00190565b61027a6102f0366004610a35565b61063e565b610103610303366004610a35565b6106a7565b6100e2610316366004610b29565b80515f805460209093015163ffffffff16600160a01b026001600160c01b03199093166001600160a01b0390921691909117919091179055565b6103777f000000000000000000000000000000000000000000000000000000000000000081565b6040516001600160a01b03909116815260200161010d565b61027a61039d366004610b90565b610908565b336001600160a01b037f000000000000000000000000000000000000000000000000000000000000000016146103eb57604051635c427cd960e01b815260040160405180910390fd5b5f838152600360205260408120549081900361041a57604051632589d98f60e11b815260040160405180910390fd5b5f818152600260205260409020600381015460ff161561044d5760405163533d99dd60e01b815260040160405180910390fd5b5f61045a84860186610bc6565b905060018151600181111561047157610471610c9d565b1461048f5760405163413041d160e01b815260040160405180910390fd5b5f81602001518060200190518101906104a89190610cb1565b60038401805460ff19166001179055805160048501819055604051919250889186917fbe3f52bb4df8f041a3e9118a0acf71ddeb18adc6fdb619f10c637273eab05e42916104f891815260200190565b60405180910390a350505050505050565b604080516020601f8401819004810282018301835281018381526060925f9291829187908790819085018382808284375f9201829052509390945250506040805180820190915292935091905080600181526020018360405160200161056f9190610cf3565b6040516020818303038152906040528152509050806040516020016105949190610d15565b6040516020818303038152906040529250505092915050565b6105e56040518060a001604052805f6001600160a01b031681526020015f81526020015f81526020015f151581526020015f81525090565b505f90815260026020818152604092839020835160a08101855281546001600160a01b031681526001820154928101929092529182015492810192909252600381015460ff161515606083015260040154608082015290565b604080516020601f8401819004810282018301835281018381526060925f9291829187908790819085018382808284375f92019190915250505091525060405190915061068f908290602001610cf3565b60405160208183030381529060405291505092915050565b5f60015f81546106b690610d57565b9182905550604080516020601f8601819004810282018301835281018581529293505f92909182919087908790819085018382808284375f920182905250939094525050604080518082019091529293509190508060018152602001836040516020016107239190610cf3565b60408051808303601f19018152918152915280516080810182523381525f60208083018290528351808501855282546001600160a01b0381168252600160a01b900463ffffffff1681830152838501529251939450929091606083019161078c91869101610d15565b60408051601f1981840301815291815291525162221dbd60e51b81529091505f906001600160a01b037f00000000000000000000000000000000000000000000000000000000000000001690630443b7a0906107ec908590600401610d7b565b6020604051808303815f875af1158015610808573d5f5f3e3d5ffd5b505050506040513d601f19601f8201168201806040525081019061082c9190610de4565b6040805160a081018252338082526020808301858152438486019081525f60608601818152608087018281528e83526002808752898420985189546001600160a01b0319166001600160a01b039091161789559451600189015592519387019390935591516003808701805460ff1916921515929092179091559051600490950194909455858152929052908290208890559051919250829187907f152b260fdc6b51380aea47b7a68bd79722f0459b2603c789e9e9f476007e07be906108f6908c908c90610dfb565b60405180910390a45050505092915050565b60605f604051806040016040528086600181111561092857610928610c9d565b815260200185858080601f0160208091040260200160405190810160405280939291908181526020018383808284375f920191909152505050915250604051909150610978908290602001610d15565b6040516020818303038152906040529150509392505050565b5f5f83601f8401126109a1575f5ffd5b50813567ffffffffffffffff8111156109b8575f5ffd5b6020830191508360208285010111156109cf575f5ffd5b9250929050565b5f5f5f604084860312156109e8575f5ffd5b83359250602084013567ffffffffffffffff811115610a05575f5ffd5b610a1186828701610991565b9497909650939450505050565b5f60208284031215610a2e575f5ffd5b5035919050565b5f5f60208385031215610a46575f5ffd5b823567ffffffffffffffff811115610a5c575f5ffd5b610a6885828601610991565b90969095509350505050565b5f81518084528060208401602086015e5f602082860101526020601f19601f83011685010191505092915050565b602081525f610ab46020830184610a74565b9392505050565b634e487b7160e01b5f52604160045260245ffd5b6040805190810167ffffffffffffffff81118282101715610af257610af2610abb565b60405290565b604051601f8201601f1916810167ffffffffffffffff81118282101715610b2157610b21610abb565b604052919050565b5f6040828403128015610b3a575f5ffd5b50610b43610acf565b82356001600160a01b0381168114610b59575f5ffd5b8152602083013563ffffffff81168114610b71575f5ffd5b60208201529392505050565b803560028110610b8b575f5ffd5b919050565b5f5f5f60408486031215610ba2575f5ffd5b610bab84610b7d565b9250602084013567ffffffffffffffff811115610a05575f5ffd5b5f60208284031215610bd6575f5ffd5b813567ffffffffffffffff811115610bec575f5ffd5b820160408185031215610bfd575f5ffd5b610c05610acf565b610c0e82610b7d565b8152602082013567ffffffffffffffff811115610c29575f5ffd5b80830192505084601f830112610c3d575f5ffd5b813567ffffffffffffffff811115610c5757610c57610abb565b610c6a601f8201601f1916602001610af8565b818152866020838601011115610c7e575f5ffd5b816020850160208301375f602092820183015290820152949350505050565b634e487b7160e01b5f52602160045260245ffd5b5f6020828403128015610cc2575f5ffd5b506040516020810167ffffffffffffffff81118282101715610ce657610ce6610abb565b6040529151825250919050565b602081525f8251602080840152610d0d6040840182610a74565b949350505050565b602081525f825160028110610d3857634e487b7160e01b5f52602160045260245ffd5b806020840152506020830151604080840152610d0d6060840182610a74565b5f60018201610d7457634e487b7160e01b5f52601160045260245ffd5b5060010190565b6020815260018060a01b0382511660208201526bffffffffffffffffffffffff60208301511660408201525f604083015160018060a01b03815116606084015263ffffffff602082015116608084015250606083015160a080840152610d0d60c0840182610a74565b5f60208284031215610df4575f5ffd5b5051919050565b60208152816020820152818360408301375f818301604090810191909152601f909201601f1916010191905056fea2646970667358221220853f73a7c5707a67682d1cb4a07d29605020784762600e2955587eec45cfe21a64736f6c634300081b0033",
+	ABI: "[{\"type\":\"constructor\",\"inputs\":[{\"name\":\"_taskMailbox\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"_executorOperatorSet\",\"type\":\"tuple\",\"internalType\":\"structOperatorSet\",\"components\":[{\"name\":\"avs\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"id\",\"type\":\"uint32\",\"internalType\":\"uint32\"}]}],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"decodeAndValidateTaskPayload\",\"inputs\":[{\"name\":\"payload\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"outputs\":[],\"stateMutability\":\"pure\"},{\"type\":\"function\",\"name\":\"encodeTaskPayload\",\"inputs\":[{\"name\":\"randomnessType\",\"type\":\"uint8\",\"internalType\":\"enumVRF.RandomnessType\"},{\"name\":\"randomnessParams\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"outputs\":[{\"name\":\"\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"stateMutability\":\"pure\"},{\"type\":\"function\",\"name\":\"encodeVDFParams\",\"inputs\":[{\"name\":\"seed\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"outputs\":[{\"name\":\"\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"stateMutability\":\"pure\"},{\"type\":\"function\",\"name\":\"encodeVDFTaskPayload\",\"inputs\":[{\"name\":\"seed\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"outputs\":[{\"name\":\"\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"stateMutability\":\"pure\"},{\"type\":\"function\",\"name\":\"executorOperatorSet\",\"inputs\":[],\"outputs\":[{\"name\":\"avs\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"id\",\"type\":\"uint32\",\"internalType\":\"uint32\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"getRandomnessResult\",\"inputs\":[{\"name\":\"requestId\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"}],\"outputs\":[{\"name\":\"fulfilled\",\"type\":\"bool\",\"internalType\":\"bool\"},{\"name\":\"result\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"getRequest\",\"inputs\":[{\"name\":\"requestId\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"}],\"outputs\":[{\"name\":\"request\",\"type\":\"tuple\",\"internalType\":\"structVRF.RandomnessRequest\",\"components\":[{\"name\":\"requester\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"blockNumber\",\"type\":\"uint256\",\"internalType\":\"uint256\"},{\"name\":\"fulfilled\",\"type\":\"bool\",\"internalType\":\"bool\"},{\"name\":\"result\",\"type\":\"uint256\",\"internalType\":\"uint256\"}]}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"onTaskCompleted\",\"inputs\":[{\"name\":\"taskHash\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"},{\"name\":\"result\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"requestRandomness\",\"inputs\":[{\"name\":\"seed\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"outputs\":[{\"name\":\"requestId\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"}],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"requests\",\"inputs\":[{\"name\":\"\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"}],\"outputs\":[{\"name\":\"requester\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"blockNumber\",\"type\":\"uint256\",\"internalType\":\"uint256\"},{\"name\":\"fulfilled\",\"type\":\"bool\",\"internalType\":\"bool\"},{\"name\":\"result\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"taskMailbox\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"contractITaskMailbox\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"updateOperatorSet\",\"inputs\":[{\"name\":\"_executorOperatorSet\",\"type\":\"tuple\",\"internalType\":\"structOperatorSet\",\"components\":[{\"name\":\"avs\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"id\",\"type\":\"uint32\",\"internalType\":\"uint32\"}]}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"validatePostTaskCreation\",\"inputs\":[{\"name\":\"taskHash\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"validatePreTaskCreation\",\"inputs\":[{\"name\":\"caller\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"operatorSet\",\"type\":\"tuple\",\"internalType\":\"structOperatorSet\",\"components\":[{\"name\":\"avs\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"id\",\"type\":\"uint32\",\"internalType\":\"uint32\"}]},{\"name\":\"payload\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"outputs\":[],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"validateTaskResultSubmission\",\"inputs\":[{\"name\":\"taskHash\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"},{\"name\":\"cert\",\"type\":\"tuple\",\"internalType\":\"structIBN254CertificateVerifierTypes.BN254Certificate\",\"components\":[{\"name\":\"referenceTimestamp\",\"type\":\"uint32\",\"internalType\":\"uint32\"},{\"name\":\"messageHash\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"},{\"name\":\"signature\",\"type\":\"tuple\",\"internalType\":\"structBN254.G1Point\",\"components\":[{\"name\":\"X\",\"type\":\"uint256\",\"internalType\":\"uint256\"},{\"name\":\"Y\",\"type\":\"uint256\",\"internalType\":\"uint256\"}]},{\"name\":\"apk\",\"type\":\"tuple\",\"internalType\":\"structBN254.G2Point\",\"components\":[{\"name\":\"X\",\"type\":\"uint256[2]\",\"internalType\":\"uint256[2]\"},{\"name\":\"Y\",\"type\":\"uint256[2]\",\"internalType\":\"uint256[2]\"}]},{\"name\":\"nonSignerWitnesses\",\"type\":\"tuple[]\",\"internalType\":\"structIBN254CertificateVerifierTypes.BN254OperatorInfoWitness[]\",\"components\":[{\"name\":\"operatorIndex\",\"type\":\"uint32\",\"internalType\":\"uint32\"},{\"name\":\"operatorInfoProof\",\"type\":\"bytes\",\"internalType\":\"bytes\"},{\"name\":\"operatorInfo\",\"type\":\"tuple\",\"internalType\":\"structIBN254TableCalculatorTypes.BN254OperatorInfo\",\"components\":[{\"name\":\"pubkey\",\"type\":\"tuple\",\"internalType\":\"structBN254.G1Point\",\"components\":[{\"name\":\"X\",\"type\":\"uint256\",\"internalType\":\"uint256\"},{\"name\":\"Y\",\"type\":\"uint256\",\"internalType\":\"uint256\"}]},{\"name\":\"weights\",\"type\":\"uint256[]\",\"internalType\":\"uint256[]\"}]}]}]}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"event\",\"name\":\"RandomnessFulfilled\",\"inputs\":[{\"name\":\"requestId\",\"type\":\"bytes32\",\"indexed\":true,\"internalType\":\"bytes32\"},{\"name\":\"result\",\"type\":\"uint256\",\"indexed\":false,\"internalType\":\"uint256\"}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"RandomnessRequested\",\"inputs\":[{\"name\":\"requestId\",\"type\":\"bytes32\",\"indexed\":true,\"internalType\":\"bytes32\"},{\"name\":\"requester\",\"type\":\"address\",\"indexed\":true,\"internalType\":\"address\"},{\"name\":\"seed\",\"type\":\"bytes\",\"indexed\":false,\"internalType\":\"bytes\"}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"TaskResultSubmissionValidated\",\"inputs\":[{\"name\":\"requestId\",\"type\":\"bytes32\",\"indexed\":true,\"internalType\":\"bytes32\"}],\"anonymous\":false},{\"type\":\"error\",\"name\":\"InvalidTaskResponse\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"RequestAlreadyFulfilled\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"RequestNotFound\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"UnauthorizedCaller\",\"inputs\":[]}]",
+	Bin: "0x60a060405234801561000f575f5ffd5b506040516116ec3803806116ec83398101604081905261002e91610087565b6001600160a01b0391821660805280515f805460209093015163ffffffff16600160a01b026001600160c01b0319909316919093161717905561011b565b80516001600160a01b0381168114610082575f5ffd5b919050565b5f5f8284036060811215610099575f5ffd5b6100a28461006c565b92506040601f19820112156100b5575f5ffd5b50604080519081016001600160401b03811182821017156100e457634e487b7160e01b5f52604160045260245ffd5b6040526100f36020850161006c565b8152604084015163ffffffff8116811461010b575f5ffd5b6020820152919491935090915050565b6080516115ab6101415f395f81816103280152818161044001526108e901526115ab5ff3fe608060405234801561000f575f5ffd5b50600436106100f0575f3560e01c8063e45c4a0d11610093578063ed0c943f11610063578063ed0c943f14610310578063f42a9e1314610323578063fb1e61ca14610362578063fdd154dc14610422575f5ffd5b8063e45c4a0d1461021e578063e507027a14610294578063e6dee7ed146102a7578063e7a923bb146102c8575f5ffd5b80638679c781116100ce5780638679c781146101665780639d86698514610177578063ac8d0738146101eb578063cdae49401461020b575f5ffd5b80630944a904146100f45780632026a4f314610109578063485e73b814610153575b5f5ffd5b610107610102366004610bd8565b610435565b005b5f5461012a906001600160a01b03811690600160a01b900463ffffffff1682565b604080516001600160a01b03909316835263ffffffff9091166020830152015b60405180910390f35b610107610161366004610fc8565b610597565b6101076101743660046110b2565b50565b6101bb6101853660046110b2565b600160208190525f918252604090912080549181015460028201546003909201546001600160a01b0390931692909160ff169084565b604080516001600160a01b039095168552602085019390935290151591830191909152606082015260800161014a565b6101fe6101f93660046110c9565b610625565b60405161014a9190611135565b6101fe6102193660046110c9565b6106c9565b61027d61022c3660046110b2565b5f90815260016020818152604092839020835160808101855281546001600160a01b031681529281015491830191909152600281015460ff1615159282018390526003015460609091018190529091565b60408051921515835260208301919091520161014a565b6101076102a23660046111a0565b610732565b6102ba6102b53660046110c9565b6107f0565b60405190815260200161014a565b6101076102d63660046111fa565b80515f805460209093015163ffffffff16600160a01b026001600160c01b03199093166001600160a01b0390921691909117919091179055565b61010761031e366004611214565b610a20565b61034a7f000000000000000000000000000000000000000000000000000000000000000081565b6040516001600160a01b03909116815260200161014a565b6103e46103703660046110b2565b604080516080810182525f808252602082018190529181018290526060810191909152505f90815260016020818152604092839020835160808101855281546001600160a01b031681529281015491830191909152600281015460ff16151592820192909252600390910154606082015290565b60405161014a919081516001600160a01b03168152602080830151908201526040808301511515908201526060918201519181019190915260800190565b6101fe610430366004611259565b610b0b565b336001600160a01b037f0000000000000000000000000000000000000000000000000000000000000000161461047e57604051635c427cd960e01b815260040160405180910390fd5b5f83815260016020526040902080548491906001600160a01b03166104b657604051632589d98f60e11b815260040160405180910390fd5b600281015460ff16156104dc5760405163533d99dd60e01b815260040160405180910390fd5b5f6104e984860186611290565b90506001815160018111156105005761050061130d565b1461051e5760405163413041d160e01b815260040160405180910390fd5b5f81602001518060200190518101906105379190611321565b60028401805460ff1916600117905580516003850181905560405191925085917f9b0aa3f92f46e24caa76b000bdf0dd495b9b390c320cf6585ae10a12b7d09edb916105869190815260200190565b60405180910390a250505050505050565b5f82815260016020526040902080548391906001600160a01b03166105cf57604051632589d98f60e11b815260040160405180910390fd5b600281015460ff16156105f55760405163533d99dd60e01b815260040160405180910390fd5b60405182907f0d5aeffd61ba930c83f1e88ec8bc110c50d1a38cf03190b0272c312d16ca7140905f90a250505050565b604080516020601f8401819004810282018301835281018381526060925f9291829187908790819085018382808284375f9201829052509390945250506040805180820190915292935091905080600181526020018360405160200161068b9190611345565b6040516020818303038152906040528152509050806040516020016106b0919061135f565b6040516020818303038152906040529250505092915050565b604080516020601f8401819004810282018301835281018381526060925f9291829187908790819085018382808284375f92019190915250505091525060405190915061071a908290602001611345565b60405160208183030381529060405291505092915050565b60405163ed0c943f60e01b8152309063ed0c943f90610755908490600401611135565b5f6040518083038186803b15801561076b575f5ffd5b505afa92505050801561077c575060015b6107995760405163413041d160e01b815260040160405180910390fd5b5f5482516001600160a01b0390811691161415806107cd57505f54602083015163ffffffff908116600160a01b9092041614155b156107eb5760405163413041d160e01b815260040160405180910390fd5b505050565b604080516020601f8401819004810282018301835281018381525f92839291829187908790819085018382808284375f920182905250939094525050604080518082019091529293509190508060018152602001836040516020016108559190611345565b60408051808303601f19018152918152915280516080810182523381525f60208083018290528351808501855282546001600160a01b0381168252600160a01b900463ffffffff168183015283850152925193945092909160608301916108be9186910161135f565b60408051601f1981840301815291815291525162221dbd60e51b81529091505f906001600160a01b037f00000000000000000000000000000000000000000000000000000000000000001690630443b7a09061091e9085906004016113a1565b6020604051808303815f875af115801561093a573d5f5f3e3d5ffd5b505050506040513d601f19601f8201168201806040525081019061095e919061140a565b60408051608081018252338082524360208084019182525f8486018181526060860182815288835260019384905291879020955186546001600160a01b0319166001600160a01b03909116178655925191850191909155905160028401805460ff19169115159190911790555160039092019190915590519196508692509082907fadbe210fbb3f1373d938d421ee71b9db071c3d86ccaf8851d6bda23e70c6b53290610a0e908b908b90611421565b60405180910390a35050505092915050565b5f81806020019051810190610a35919061149c565b9050600181516001811115610a4c57610a4c61130d565b14158015610a6c57505f81516001811115610a6957610a6961130d565b14155b15610a8a5760405163413041d160e01b815260040160405180910390fd5b600181516001811115610a9f57610a9f61130d565b03610b07575f8160200151806020019051810190610abd919061150b565b8051519091505f03610ae25760405163413041d160e01b815260040160405180910390fd5b80515161040010156107eb5760405163413041d160e01b815260040160405180910390fd5b5050565b60605f6040518060400160405280866001811115610b2b57610b2b61130d565b815260200185858080601f0160208091040260200160405190810160405280939291908181526020018383808284375f920191909152505050915250604051909150610b7b90829060200161135f565b6040516020818303038152906040529150509392505050565b5f5f83601f840112610ba4575f5ffd5b5081356001600160401b03811115610bba575f5ffd5b602083019150836020828501011115610bd1575f5ffd5b9250929050565b5f5f5f60408486031215610bea575f5ffd5b8335925060208401356001600160401b03811115610c06575f5ffd5b610c1286828701610b94565b9497909650939450505050565b634e487b7160e01b5f52604160045260245ffd5b604080519081016001600160401b0381118282101715610c5557610c55610c1f565b60405290565b604051606081016001600160401b0381118282101715610c5557610c55610c1f565b60405160a081016001600160401b0381118282101715610c5557610c55610c1f565b604051602081016001600160401b0381118282101715610c5557610c55610c1f565b604051601f8201601f191681016001600160401b0381118282101715610ce957610ce9610c1f565b604052919050565b803563ffffffff81168114610d04575f5ffd5b919050565b5f60408284031215610d19575f5ffd5b610d21610c33565b823581526020928301359281019290925250919050565b5f82601f830112610d47575f5ffd5b610d4f610c33565b806040840185811115610d60575f5ffd5b845b81811015610d7a578035845260209384019301610d62565b509095945050505050565b5f6001600160401b03821115610d9d57610d9d610c1f565b5060051b60200190565b5f6001600160401b03821115610dbf57610dbf610c1f565b50601f01601f191660200190565b5f82601f830112610ddc575f5ffd5b8135610def610dea82610da7565b610cc1565b818152846020838601011115610e03575f5ffd5b816020850160208301375f918101602001919091529392505050565b5f82601f830112610e2e575f5ffd5b8135610e3c610dea82610d85565b8082825260208201915060208360051b860101925085831115610e5d575f5ffd5b602085015b83811015610fbe5780356001600160401b03811115610e7f575f5ffd5b86016060818903601f19011215610e94575f5ffd5b610e9c610c5b565b610ea860208301610cf1565b815260408201356001600160401b03811115610ec2575f5ffd5b610ed18a602083860101610dcd565b60208301525060608201356001600160401b03811115610eef575f5ffd5b6020818401019250506060828a031215610f07575f5ffd5b610f0f610c33565b610f198a84610d09565b815260408301356001600160401b03811115610f33575f5ffd5b80840193505089601f840112610f47575f5ffd5b8235610f55610dea82610d85565b8082825260208201915060208360051b87010192508c831115610f76575f5ffd5b6020860195505b82861015610f98578535825260209586019590910190610f7d565b806020850152505050806040830152508085525050602083019250602081019050610e62565b5095945050505050565b5f5f60408385031215610fd9575f5ffd5b8235915060208301356001600160401b03811115610ff5575f5ffd5b8301808503610120811215611008575f5ffd5b611010610c7d565b61101983610cf1565b8152602083810135908201526110328760408501610d09565b60408201526080607f1983011215611048575f5ffd5b611050610c33565b915061105f8760808501610d38565b825261106e8760c08501610d38565b602083015281606082015261010083013591506001600160401b03821115611094575f5ffd5b6110a087838501610e1f565b60808201528093505050509250929050565b5f602082840312156110c2575f5ffd5b5035919050565b5f5f602083850312156110da575f5ffd5b82356001600160401b038111156110ef575f5ffd5b6110fb85828601610b94565b90969095509350505050565b5f81518084528060208401602086015e5f602082860101526020601f19601f83011685010191505092915050565b602081525f6111476020830184611107565b9392505050565b80356001600160a01b0381168114610d04575f5ffd5b5f60408284031215611174575f5ffd5b61117c610c33565b90506111878261114e565b815261119560208301610cf1565b602082015292915050565b5f5f5f608084860312156111b2575f5ffd5b6111bb8461114e565b92506111ca8560208601611164565b915060608401356001600160401b038111156111e4575f5ffd5b6111f086828701610dcd565b9150509250925092565b5f6040828403121561120a575f5ffd5b6111478383611164565b5f60208284031215611224575f5ffd5b81356001600160401b03811115611239575f5ffd5b61124584828501610dcd565b949350505050565b60028110610174575f5ffd5b5f5f5f6040848603121561126b575f5ffd5b83356112768161124d565b925060208401356001600160401b03811115610c06575f5ffd5b5f602082840312156112a0575f5ffd5b81356001600160401b038111156112b5575f5ffd5b8201604081850312156112c6575f5ffd5b6112ce610c33565b81356112d98161124d565b815260208201356001600160401b038111156112f3575f5ffd5b6112ff86828501610dcd565b602083015250949350505050565b634e487b7160e01b5f52602160045260245ffd5b5f6020828403128015611332575f5ffd5b5061133b610c9f565b9151825250919050565b602081525f82516020808401526112456040840182611107565b602081525f82516002811061138257634e487b7160e01b5f52602160045260245ffd5b8060208401525060208301516040808401526112456060840182611107565b6020815260018060a01b0382511660208201526bffffffffffffffffffffffff60208301511660408201525f604083015160018060a01b03815116606084015263ffffffff602082015116608084015250606083015160a08084015261124560c0840182611107565b5f6020828403121561141a575f5ffd5b5051919050565b60208152816020820152818360408301375f818301604090810191909152601f909201601f19160101919050565b5f82601f83011261145e575f5ffd5b815161146c610dea82610da7565b818152846020838601011115611480575f5ffd5b8160208501602083015e5f918101602001919091529392505050565b5f602082840312156114ac575f5ffd5b81516001600160401b038111156114c1575f5ffd5b8201604081850312156114d2575f5ffd5b6114da610c33565b81516114e58161124d565b815260208201516001600160401b038111156114ff575f5ffd5b6112ff8682850161144f565b5f6020828403121561151b575f5ffd5b81516001600160401b03811115611530575f5ffd5b820160208185031215611541575f5ffd5b611549610c9f565b81516001600160401b0381111561155e575f5ffd5b61156a8682850161144f565b82525094935050505056fea26469706673582212209a981b3d7bc0eb41cd2f4930a6f23571f640733fd3903b1fcc70f773c3f7457964736f6c634300081b0033",
 }
 
 // VRFABI is the input ABI used to generate the binding from.
@@ -217,6 +250,35 @@ func (_VRF *VRFTransactorRaw) Transact(opts *bind.TransactOpts, method string, p
 	return _VRF.Contract.contract.Transact(opts, method, params...)
 }
 
+// DecodeAndValidateTaskPayload is a free data retrieval call binding the contract method 0xed0c943f.
+//
+// Solidity: function decodeAndValidateTaskPayload(bytes payload) pure returns()
+func (_VRF *VRFCaller) DecodeAndValidateTaskPayload(opts *bind.CallOpts, payload []byte) error {
+	var out []interface{}
+	err := _VRF.contract.Call(opts, &out, "decodeAndValidateTaskPayload", payload)
+
+	if err != nil {
+		return err
+	}
+
+	return err
+
+}
+
+// DecodeAndValidateTaskPayload is a free data retrieval call binding the contract method 0xed0c943f.
+//
+// Solidity: function decodeAndValidateTaskPayload(bytes payload) pure returns()
+func (_VRF *VRFSession) DecodeAndValidateTaskPayload(payload []byte) error {
+	return _VRF.Contract.DecodeAndValidateTaskPayload(&_VRF.CallOpts, payload)
+}
+
+// DecodeAndValidateTaskPayload is a free data retrieval call binding the contract method 0xed0c943f.
+//
+// Solidity: function decodeAndValidateTaskPayload(bytes payload) pure returns()
+func (_VRF *VRFCallerSession) DecodeAndValidateTaskPayload(payload []byte) error {
+	return _VRF.Contract.DecodeAndValidateTaskPayload(&_VRF.CallOpts, payload)
+}
+
 // EncodeTaskPayload is a free data retrieval call binding the contract method 0xfdd154dc.
 //
 // Solidity: function encodeTaskPayload(uint8 randomnessType, bytes randomnessParams) pure returns(bytes)
@@ -355,10 +417,10 @@ func (_VRF *VRFCallerSession) ExecutorOperatorSet() (struct {
 	return _VRF.Contract.ExecutorOperatorSet(&_VRF.CallOpts)
 }
 
-// GetRandomnessResult is a free data retrieval call binding the contract method 0x6a36dab9.
+// GetRandomnessResult is a free data retrieval call binding the contract method 0xe45c4a0d.
 //
-// Solidity: function getRandomnessResult(uint256 requestId) view returns(bool fulfilled, uint256 result)
-func (_VRF *VRFCaller) GetRandomnessResult(opts *bind.CallOpts, requestId *big.Int) (struct {
+// Solidity: function getRandomnessResult(bytes32 requestId) view returns(bool fulfilled, uint256 result)
+func (_VRF *VRFCaller) GetRandomnessResult(opts *bind.CallOpts, requestId [32]byte) (struct {
 	Fulfilled bool
 	Result    *big.Int
 }, error) {
@@ -380,30 +442,30 @@ func (_VRF *VRFCaller) GetRandomnessResult(opts *bind.CallOpts, requestId *big.I
 
 }
 
-// GetRandomnessResult is a free data retrieval call binding the contract method 0x6a36dab9.
+// GetRandomnessResult is a free data retrieval call binding the contract method 0xe45c4a0d.
 //
-// Solidity: function getRandomnessResult(uint256 requestId) view returns(bool fulfilled, uint256 result)
-func (_VRF *VRFSession) GetRandomnessResult(requestId *big.Int) (struct {
+// Solidity: function getRandomnessResult(bytes32 requestId) view returns(bool fulfilled, uint256 result)
+func (_VRF *VRFSession) GetRandomnessResult(requestId [32]byte) (struct {
 	Fulfilled bool
 	Result    *big.Int
 }, error) {
 	return _VRF.Contract.GetRandomnessResult(&_VRF.CallOpts, requestId)
 }
 
-// GetRandomnessResult is a free data retrieval call binding the contract method 0x6a36dab9.
+// GetRandomnessResult is a free data retrieval call binding the contract method 0xe45c4a0d.
 //
-// Solidity: function getRandomnessResult(uint256 requestId) view returns(bool fulfilled, uint256 result)
-func (_VRF *VRFCallerSession) GetRandomnessResult(requestId *big.Int) (struct {
+// Solidity: function getRandomnessResult(bytes32 requestId) view returns(bool fulfilled, uint256 result)
+func (_VRF *VRFCallerSession) GetRandomnessResult(requestId [32]byte) (struct {
 	Fulfilled bool
 	Result    *big.Int
 }, error) {
 	return _VRF.Contract.GetRandomnessResult(&_VRF.CallOpts, requestId)
 }
 
-// GetRequest is a free data retrieval call binding the contract method 0xc58343ef.
+// GetRequest is a free data retrieval call binding the contract method 0xfb1e61ca.
 //
-// Solidity: function getRequest(uint256 requestId) view returns((address,bytes32,uint256,bool,uint256) request)
-func (_VRF *VRFCaller) GetRequest(opts *bind.CallOpts, requestId *big.Int) (VRFRandomnessRequest, error) {
+// Solidity: function getRequest(bytes32 requestId) view returns((address,uint256,bool,uint256) request)
+func (_VRF *VRFCaller) GetRequest(opts *bind.CallOpts, requestId [32]byte) (VRFRandomnessRequest, error) {
 	var out []interface{}
 	err := _VRF.contract.Call(opts, &out, "getRequest", requestId)
 
@@ -417,57 +479,25 @@ func (_VRF *VRFCaller) GetRequest(opts *bind.CallOpts, requestId *big.Int) (VRFR
 
 }
 
-// GetRequest is a free data retrieval call binding the contract method 0xc58343ef.
+// GetRequest is a free data retrieval call binding the contract method 0xfb1e61ca.
 //
-// Solidity: function getRequest(uint256 requestId) view returns((address,bytes32,uint256,bool,uint256) request)
-func (_VRF *VRFSession) GetRequest(requestId *big.Int) (VRFRandomnessRequest, error) {
+// Solidity: function getRequest(bytes32 requestId) view returns((address,uint256,bool,uint256) request)
+func (_VRF *VRFSession) GetRequest(requestId [32]byte) (VRFRandomnessRequest, error) {
 	return _VRF.Contract.GetRequest(&_VRF.CallOpts, requestId)
 }
 
-// GetRequest is a free data retrieval call binding the contract method 0xc58343ef.
+// GetRequest is a free data retrieval call binding the contract method 0xfb1e61ca.
 //
-// Solidity: function getRequest(uint256 requestId) view returns((address,bytes32,uint256,bool,uint256) request)
-func (_VRF *VRFCallerSession) GetRequest(requestId *big.Int) (VRFRandomnessRequest, error) {
+// Solidity: function getRequest(bytes32 requestId) view returns((address,uint256,bool,uint256) request)
+func (_VRF *VRFCallerSession) GetRequest(requestId [32]byte) (VRFRandomnessRequest, error) {
 	return _VRF.Contract.GetRequest(&_VRF.CallOpts, requestId)
 }
 
-// GetRequestCounter is a free data retrieval call binding the contract method 0xa2785f0b.
+// Requests is a free data retrieval call binding the contract method 0x9d866985.
 //
-// Solidity: function getRequestCounter() view returns(uint256)
-func (_VRF *VRFCaller) GetRequestCounter(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
-	err := _VRF.contract.Call(opts, &out, "getRequestCounter")
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// GetRequestCounter is a free data retrieval call binding the contract method 0xa2785f0b.
-//
-// Solidity: function getRequestCounter() view returns(uint256)
-func (_VRF *VRFSession) GetRequestCounter() (*big.Int, error) {
-	return _VRF.Contract.GetRequestCounter(&_VRF.CallOpts)
-}
-
-// GetRequestCounter is a free data retrieval call binding the contract method 0xa2785f0b.
-//
-// Solidity: function getRequestCounter() view returns(uint256)
-func (_VRF *VRFCallerSession) GetRequestCounter() (*big.Int, error) {
-	return _VRF.Contract.GetRequestCounter(&_VRF.CallOpts)
-}
-
-// Requests is a free data retrieval call binding the contract method 0x81d12c58.
-//
-// Solidity: function requests(uint256 ) view returns(address requester, bytes32 taskHash, uint256 blockNumber, bool fulfilled, uint256 result)
-func (_VRF *VRFCaller) Requests(opts *bind.CallOpts, arg0 *big.Int) (struct {
+// Solidity: function requests(bytes32 ) view returns(address requester, uint256 blockNumber, bool fulfilled, uint256 result)
+func (_VRF *VRFCaller) Requests(opts *bind.CallOpts, arg0 [32]byte) (struct {
 	Requester   common.Address
-	TaskHash    [32]byte
 	BlockNumber *big.Int
 	Fulfilled   bool
 	Result      *big.Int
@@ -477,7 +507,6 @@ func (_VRF *VRFCaller) Requests(opts *bind.CallOpts, arg0 *big.Int) (struct {
 
 	outstruct := new(struct {
 		Requester   common.Address
-		TaskHash    [32]byte
 		BlockNumber *big.Int
 		Fulfilled   bool
 		Result      *big.Int
@@ -487,21 +516,19 @@ func (_VRF *VRFCaller) Requests(opts *bind.CallOpts, arg0 *big.Int) (struct {
 	}
 
 	outstruct.Requester = *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-	outstruct.TaskHash = *abi.ConvertType(out[1], new([32]byte)).(*[32]byte)
-	outstruct.BlockNumber = *abi.ConvertType(out[2], new(*big.Int)).(**big.Int)
-	outstruct.Fulfilled = *abi.ConvertType(out[3], new(bool)).(*bool)
-	outstruct.Result = *abi.ConvertType(out[4], new(*big.Int)).(**big.Int)
+	outstruct.BlockNumber = *abi.ConvertType(out[1], new(*big.Int)).(**big.Int)
+	outstruct.Fulfilled = *abi.ConvertType(out[2], new(bool)).(*bool)
+	outstruct.Result = *abi.ConvertType(out[3], new(*big.Int)).(**big.Int)
 
 	return *outstruct, err
 
 }
 
-// Requests is a free data retrieval call binding the contract method 0x81d12c58.
+// Requests is a free data retrieval call binding the contract method 0x9d866985.
 //
-// Solidity: function requests(uint256 ) view returns(address requester, bytes32 taskHash, uint256 blockNumber, bool fulfilled, uint256 result)
-func (_VRF *VRFSession) Requests(arg0 *big.Int) (struct {
+// Solidity: function requests(bytes32 ) view returns(address requester, uint256 blockNumber, bool fulfilled, uint256 result)
+func (_VRF *VRFSession) Requests(arg0 [32]byte) (struct {
 	Requester   common.Address
-	TaskHash    [32]byte
 	BlockNumber *big.Int
 	Fulfilled   bool
 	Result      *big.Int
@@ -509,48 +536,16 @@ func (_VRF *VRFSession) Requests(arg0 *big.Int) (struct {
 	return _VRF.Contract.Requests(&_VRF.CallOpts, arg0)
 }
 
-// Requests is a free data retrieval call binding the contract method 0x81d12c58.
+// Requests is a free data retrieval call binding the contract method 0x9d866985.
 //
-// Solidity: function requests(uint256 ) view returns(address requester, bytes32 taskHash, uint256 blockNumber, bool fulfilled, uint256 result)
-func (_VRF *VRFCallerSession) Requests(arg0 *big.Int) (struct {
+// Solidity: function requests(bytes32 ) view returns(address requester, uint256 blockNumber, bool fulfilled, uint256 result)
+func (_VRF *VRFCallerSession) Requests(arg0 [32]byte) (struct {
 	Requester   common.Address
-	TaskHash    [32]byte
 	BlockNumber *big.Int
 	Fulfilled   bool
 	Result      *big.Int
 }, error) {
 	return _VRF.Contract.Requests(&_VRF.CallOpts, arg0)
-}
-
-// TaskHashToRequestId is a free data retrieval call binding the contract method 0x15505f8c.
-//
-// Solidity: function taskHashToRequestId(bytes32 ) view returns(uint256)
-func (_VRF *VRFCaller) TaskHashToRequestId(opts *bind.CallOpts, arg0 [32]byte) (*big.Int, error) {
-	var out []interface{}
-	err := _VRF.contract.Call(opts, &out, "taskHashToRequestId", arg0)
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// TaskHashToRequestId is a free data retrieval call binding the contract method 0x15505f8c.
-//
-// Solidity: function taskHashToRequestId(bytes32 ) view returns(uint256)
-func (_VRF *VRFSession) TaskHashToRequestId(arg0 [32]byte) (*big.Int, error) {
-	return _VRF.Contract.TaskHashToRequestId(&_VRF.CallOpts, arg0)
-}
-
-// TaskHashToRequestId is a free data retrieval call binding the contract method 0x15505f8c.
-//
-// Solidity: function taskHashToRequestId(bytes32 ) view returns(uint256)
-func (_VRF *VRFCallerSession) TaskHashToRequestId(arg0 [32]byte) (*big.Int, error) {
-	return _VRF.Contract.TaskHashToRequestId(&_VRF.CallOpts, arg0)
 }
 
 // TaskMailbox is a free data retrieval call binding the contract method 0xf42a9e13.
@@ -584,6 +579,35 @@ func (_VRF *VRFCallerSession) TaskMailbox() (common.Address, error) {
 	return _VRF.Contract.TaskMailbox(&_VRF.CallOpts)
 }
 
+// ValidatePreTaskCreation is a free data retrieval call binding the contract method 0xe507027a.
+//
+// Solidity: function validatePreTaskCreation(address caller, (address,uint32) operatorSet, bytes payload) view returns()
+func (_VRF *VRFCaller) ValidatePreTaskCreation(opts *bind.CallOpts, caller common.Address, operatorSet OperatorSet, payload []byte) error {
+	var out []interface{}
+	err := _VRF.contract.Call(opts, &out, "validatePreTaskCreation", caller, operatorSet, payload)
+
+	if err != nil {
+		return err
+	}
+
+	return err
+
+}
+
+// ValidatePreTaskCreation is a free data retrieval call binding the contract method 0xe507027a.
+//
+// Solidity: function validatePreTaskCreation(address caller, (address,uint32) operatorSet, bytes payload) view returns()
+func (_VRF *VRFSession) ValidatePreTaskCreation(caller common.Address, operatorSet OperatorSet, payload []byte) error {
+	return _VRF.Contract.ValidatePreTaskCreation(&_VRF.CallOpts, caller, operatorSet, payload)
+}
+
+// ValidatePreTaskCreation is a free data retrieval call binding the contract method 0xe507027a.
+//
+// Solidity: function validatePreTaskCreation(address caller, (address,uint32) operatorSet, bytes payload) view returns()
+func (_VRF *VRFCallerSession) ValidatePreTaskCreation(caller common.Address, operatorSet OperatorSet, payload []byte) error {
+	return _VRF.Contract.ValidatePreTaskCreation(&_VRF.CallOpts, caller, operatorSet, payload)
+}
+
 // OnTaskCompleted is a paid mutator transaction binding the contract method 0x0944a904.
 //
 // Solidity: function onTaskCompleted(bytes32 taskHash, bytes result) returns()
@@ -607,21 +631,21 @@ func (_VRF *VRFTransactorSession) OnTaskCompleted(taskHash [32]byte, result []by
 
 // RequestRandomness is a paid mutator transaction binding the contract method 0xe6dee7ed.
 //
-// Solidity: function requestRandomness(bytes seed) returns(uint256 requestId)
+// Solidity: function requestRandomness(bytes seed) returns(bytes32 requestId)
 func (_VRF *VRFTransactor) RequestRandomness(opts *bind.TransactOpts, seed []byte) (*types.Transaction, error) {
 	return _VRF.contract.Transact(opts, "requestRandomness", seed)
 }
 
 // RequestRandomness is a paid mutator transaction binding the contract method 0xe6dee7ed.
 //
-// Solidity: function requestRandomness(bytes seed) returns(uint256 requestId)
+// Solidity: function requestRandomness(bytes seed) returns(bytes32 requestId)
 func (_VRF *VRFSession) RequestRandomness(seed []byte) (*types.Transaction, error) {
 	return _VRF.Contract.RequestRandomness(&_VRF.TransactOpts, seed)
 }
 
 // RequestRandomness is a paid mutator transaction binding the contract method 0xe6dee7ed.
 //
-// Solidity: function requestRandomness(bytes seed) returns(uint256 requestId)
+// Solidity: function requestRandomness(bytes seed) returns(bytes32 requestId)
 func (_VRF *VRFTransactorSession) RequestRandomness(seed []byte) (*types.Transaction, error) {
 	return _VRF.Contract.RequestRandomness(&_VRF.TransactOpts, seed)
 }
@@ -645,6 +669,48 @@ func (_VRF *VRFSession) UpdateOperatorSet(_executorOperatorSet OperatorSet) (*ty
 // Solidity: function updateOperatorSet((address,uint32) _executorOperatorSet) returns()
 func (_VRF *VRFTransactorSession) UpdateOperatorSet(_executorOperatorSet OperatorSet) (*types.Transaction, error) {
 	return _VRF.Contract.UpdateOperatorSet(&_VRF.TransactOpts, _executorOperatorSet)
+}
+
+// ValidatePostTaskCreation is a paid mutator transaction binding the contract method 0x8679c781.
+//
+// Solidity: function validatePostTaskCreation(bytes32 taskHash) returns()
+func (_VRF *VRFTransactor) ValidatePostTaskCreation(opts *bind.TransactOpts, taskHash [32]byte) (*types.Transaction, error) {
+	return _VRF.contract.Transact(opts, "validatePostTaskCreation", taskHash)
+}
+
+// ValidatePostTaskCreation is a paid mutator transaction binding the contract method 0x8679c781.
+//
+// Solidity: function validatePostTaskCreation(bytes32 taskHash) returns()
+func (_VRF *VRFSession) ValidatePostTaskCreation(taskHash [32]byte) (*types.Transaction, error) {
+	return _VRF.Contract.ValidatePostTaskCreation(&_VRF.TransactOpts, taskHash)
+}
+
+// ValidatePostTaskCreation is a paid mutator transaction binding the contract method 0x8679c781.
+//
+// Solidity: function validatePostTaskCreation(bytes32 taskHash) returns()
+func (_VRF *VRFTransactorSession) ValidatePostTaskCreation(taskHash [32]byte) (*types.Transaction, error) {
+	return _VRF.Contract.ValidatePostTaskCreation(&_VRF.TransactOpts, taskHash)
+}
+
+// ValidateTaskResultSubmission is a paid mutator transaction binding the contract method 0x485e73b8.
+//
+// Solidity: function validateTaskResultSubmission(bytes32 taskHash, (uint32,bytes32,(uint256,uint256),(uint256[2],uint256[2]),(uint32,bytes,((uint256,uint256),uint256[]))[]) cert) returns()
+func (_VRF *VRFTransactor) ValidateTaskResultSubmission(opts *bind.TransactOpts, taskHash [32]byte, cert IBN254CertificateVerifierTypesBN254Certificate) (*types.Transaction, error) {
+	return _VRF.contract.Transact(opts, "validateTaskResultSubmission", taskHash, cert)
+}
+
+// ValidateTaskResultSubmission is a paid mutator transaction binding the contract method 0x485e73b8.
+//
+// Solidity: function validateTaskResultSubmission(bytes32 taskHash, (uint32,bytes32,(uint256,uint256),(uint256[2],uint256[2]),(uint32,bytes,((uint256,uint256),uint256[]))[]) cert) returns()
+func (_VRF *VRFSession) ValidateTaskResultSubmission(taskHash [32]byte, cert IBN254CertificateVerifierTypesBN254Certificate) (*types.Transaction, error) {
+	return _VRF.Contract.ValidateTaskResultSubmission(&_VRF.TransactOpts, taskHash, cert)
+}
+
+// ValidateTaskResultSubmission is a paid mutator transaction binding the contract method 0x485e73b8.
+//
+// Solidity: function validateTaskResultSubmission(bytes32 taskHash, (uint32,bytes32,(uint256,uint256),(uint256[2],uint256[2]),(uint32,bytes,((uint256,uint256),uint256[]))[]) cert) returns()
+func (_VRF *VRFTransactorSession) ValidateTaskResultSubmission(taskHash [32]byte, cert IBN254CertificateVerifierTypesBN254Certificate) (*types.Transaction, error) {
+	return _VRF.Contract.ValidateTaskResultSubmission(&_VRF.TransactOpts, taskHash, cert)
 }
 
 // VRFRandomnessFulfilledIterator is returned from FilterRandomnessFulfilled and is used to iterate over the raw logs and unpacked data for RandomnessFulfilled events raised by the VRF contract.
@@ -716,48 +782,39 @@ func (it *VRFRandomnessFulfilledIterator) Close() error {
 
 // VRFRandomnessFulfilled represents a RandomnessFulfilled event raised by the VRF contract.
 type VRFRandomnessFulfilled struct {
-	RequestId *big.Int
-	TaskHash  [32]byte
+	RequestId [32]byte
 	Result    *big.Int
 	Raw       types.Log // Blockchain specific contextual infos
 }
 
-// FilterRandomnessFulfilled is a free log retrieval operation binding the contract event 0xbe3f52bb4df8f041a3e9118a0acf71ddeb18adc6fdb619f10c637273eab05e42.
+// FilterRandomnessFulfilled is a free log retrieval operation binding the contract event 0x9b0aa3f92f46e24caa76b000bdf0dd495b9b390c320cf6585ae10a12b7d09edb.
 //
-// Solidity: event RandomnessFulfilled(uint256 indexed requestId, bytes32 indexed taskHash, uint256 result)
-func (_VRF *VRFFilterer) FilterRandomnessFulfilled(opts *bind.FilterOpts, requestId []*big.Int, taskHash [][32]byte) (*VRFRandomnessFulfilledIterator, error) {
+// Solidity: event RandomnessFulfilled(bytes32 indexed requestId, uint256 result)
+func (_VRF *VRFFilterer) FilterRandomnessFulfilled(opts *bind.FilterOpts, requestId [][32]byte) (*VRFRandomnessFulfilledIterator, error) {
 
 	var requestIdRule []interface{}
 	for _, requestIdItem := range requestId {
 		requestIdRule = append(requestIdRule, requestIdItem)
 	}
-	var taskHashRule []interface{}
-	for _, taskHashItem := range taskHash {
-		taskHashRule = append(taskHashRule, taskHashItem)
-	}
 
-	logs, sub, err := _VRF.contract.FilterLogs(opts, "RandomnessFulfilled", requestIdRule, taskHashRule)
+	logs, sub, err := _VRF.contract.FilterLogs(opts, "RandomnessFulfilled", requestIdRule)
 	if err != nil {
 		return nil, err
 	}
 	return &VRFRandomnessFulfilledIterator{contract: _VRF.contract, event: "RandomnessFulfilled", logs: logs, sub: sub}, nil
 }
 
-// WatchRandomnessFulfilled is a free log subscription operation binding the contract event 0xbe3f52bb4df8f041a3e9118a0acf71ddeb18adc6fdb619f10c637273eab05e42.
+// WatchRandomnessFulfilled is a free log subscription operation binding the contract event 0x9b0aa3f92f46e24caa76b000bdf0dd495b9b390c320cf6585ae10a12b7d09edb.
 //
-// Solidity: event RandomnessFulfilled(uint256 indexed requestId, bytes32 indexed taskHash, uint256 result)
-func (_VRF *VRFFilterer) WatchRandomnessFulfilled(opts *bind.WatchOpts, sink chan<- *VRFRandomnessFulfilled, requestId []*big.Int, taskHash [][32]byte) (event.Subscription, error) {
+// Solidity: event RandomnessFulfilled(bytes32 indexed requestId, uint256 result)
+func (_VRF *VRFFilterer) WatchRandomnessFulfilled(opts *bind.WatchOpts, sink chan<- *VRFRandomnessFulfilled, requestId [][32]byte) (event.Subscription, error) {
 
 	var requestIdRule []interface{}
 	for _, requestIdItem := range requestId {
 		requestIdRule = append(requestIdRule, requestIdItem)
 	}
-	var taskHashRule []interface{}
-	for _, taskHashItem := range taskHash {
-		taskHashRule = append(taskHashRule, taskHashItem)
-	}
 
-	logs, sub, err := _VRF.contract.WatchLogs(opts, "RandomnessFulfilled", requestIdRule, taskHashRule)
+	logs, sub, err := _VRF.contract.WatchLogs(opts, "RandomnessFulfilled", requestIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -789,9 +846,9 @@ func (_VRF *VRFFilterer) WatchRandomnessFulfilled(opts *bind.WatchOpts, sink cha
 	}), nil
 }
 
-// ParseRandomnessFulfilled is a log parse operation binding the contract event 0xbe3f52bb4df8f041a3e9118a0acf71ddeb18adc6fdb619f10c637273eab05e42.
+// ParseRandomnessFulfilled is a log parse operation binding the contract event 0x9b0aa3f92f46e24caa76b000bdf0dd495b9b390c320cf6585ae10a12b7d09edb.
 //
-// Solidity: event RandomnessFulfilled(uint256 indexed requestId, bytes32 indexed taskHash, uint256 result)
+// Solidity: event RandomnessFulfilled(bytes32 indexed requestId, uint256 result)
 func (_VRF *VRFFilterer) ParseRandomnessFulfilled(log types.Log) (*VRFRandomnessFulfilled, error) {
 	event := new(VRFRandomnessFulfilled)
 	if err := _VRF.contract.UnpackLog(event, "RandomnessFulfilled", log); err != nil {
@@ -870,17 +927,16 @@ func (it *VRFRandomnessRequestedIterator) Close() error {
 
 // VRFRandomnessRequested represents a RandomnessRequested event raised by the VRF contract.
 type VRFRandomnessRequested struct {
-	RequestId *big.Int
+	RequestId [32]byte
 	Requester common.Address
-	TaskHash  [32]byte
 	Seed      []byte
 	Raw       types.Log // Blockchain specific contextual infos
 }
 
-// FilterRandomnessRequested is a free log retrieval operation binding the contract event 0x152b260fdc6b51380aea47b7a68bd79722f0459b2603c789e9e9f476007e07be.
+// FilterRandomnessRequested is a free log retrieval operation binding the contract event 0xadbe210fbb3f1373d938d421ee71b9db071c3d86ccaf8851d6bda23e70c6b532.
 //
-// Solidity: event RandomnessRequested(uint256 indexed requestId, address indexed requester, bytes32 indexed taskHash, bytes seed)
-func (_VRF *VRFFilterer) FilterRandomnessRequested(opts *bind.FilterOpts, requestId []*big.Int, requester []common.Address, taskHash [][32]byte) (*VRFRandomnessRequestedIterator, error) {
+// Solidity: event RandomnessRequested(bytes32 indexed requestId, address indexed requester, bytes seed)
+func (_VRF *VRFFilterer) FilterRandomnessRequested(opts *bind.FilterOpts, requestId [][32]byte, requester []common.Address) (*VRFRandomnessRequestedIterator, error) {
 
 	var requestIdRule []interface{}
 	for _, requestIdItem := range requestId {
@@ -890,22 +946,18 @@ func (_VRF *VRFFilterer) FilterRandomnessRequested(opts *bind.FilterOpts, reques
 	for _, requesterItem := range requester {
 		requesterRule = append(requesterRule, requesterItem)
 	}
-	var taskHashRule []interface{}
-	for _, taskHashItem := range taskHash {
-		taskHashRule = append(taskHashRule, taskHashItem)
-	}
 
-	logs, sub, err := _VRF.contract.FilterLogs(opts, "RandomnessRequested", requestIdRule, requesterRule, taskHashRule)
+	logs, sub, err := _VRF.contract.FilterLogs(opts, "RandomnessRequested", requestIdRule, requesterRule)
 	if err != nil {
 		return nil, err
 	}
 	return &VRFRandomnessRequestedIterator{contract: _VRF.contract, event: "RandomnessRequested", logs: logs, sub: sub}, nil
 }
 
-// WatchRandomnessRequested is a free log subscription operation binding the contract event 0x152b260fdc6b51380aea47b7a68bd79722f0459b2603c789e9e9f476007e07be.
+// WatchRandomnessRequested is a free log subscription operation binding the contract event 0xadbe210fbb3f1373d938d421ee71b9db071c3d86ccaf8851d6bda23e70c6b532.
 //
-// Solidity: event RandomnessRequested(uint256 indexed requestId, address indexed requester, bytes32 indexed taskHash, bytes seed)
-func (_VRF *VRFFilterer) WatchRandomnessRequested(opts *bind.WatchOpts, sink chan<- *VRFRandomnessRequested, requestId []*big.Int, requester []common.Address, taskHash [][32]byte) (event.Subscription, error) {
+// Solidity: event RandomnessRequested(bytes32 indexed requestId, address indexed requester, bytes seed)
+func (_VRF *VRFFilterer) WatchRandomnessRequested(opts *bind.WatchOpts, sink chan<- *VRFRandomnessRequested, requestId [][32]byte, requester []common.Address) (event.Subscription, error) {
 
 	var requestIdRule []interface{}
 	for _, requestIdItem := range requestId {
@@ -915,12 +967,8 @@ func (_VRF *VRFFilterer) WatchRandomnessRequested(opts *bind.WatchOpts, sink cha
 	for _, requesterItem := range requester {
 		requesterRule = append(requesterRule, requesterItem)
 	}
-	var taskHashRule []interface{}
-	for _, taskHashItem := range taskHash {
-		taskHashRule = append(taskHashRule, taskHashItem)
-	}
 
-	logs, sub, err := _VRF.contract.WatchLogs(opts, "RandomnessRequested", requestIdRule, requesterRule, taskHashRule)
+	logs, sub, err := _VRF.contract.WatchLogs(opts, "RandomnessRequested", requestIdRule, requesterRule)
 	if err != nil {
 		return nil, err
 	}
@@ -952,12 +1000,156 @@ func (_VRF *VRFFilterer) WatchRandomnessRequested(opts *bind.WatchOpts, sink cha
 	}), nil
 }
 
-// ParseRandomnessRequested is a log parse operation binding the contract event 0x152b260fdc6b51380aea47b7a68bd79722f0459b2603c789e9e9f476007e07be.
+// ParseRandomnessRequested is a log parse operation binding the contract event 0xadbe210fbb3f1373d938d421ee71b9db071c3d86ccaf8851d6bda23e70c6b532.
 //
-// Solidity: event RandomnessRequested(uint256 indexed requestId, address indexed requester, bytes32 indexed taskHash, bytes seed)
+// Solidity: event RandomnessRequested(bytes32 indexed requestId, address indexed requester, bytes seed)
 func (_VRF *VRFFilterer) ParseRandomnessRequested(log types.Log) (*VRFRandomnessRequested, error) {
 	event := new(VRFRandomnessRequested)
 	if err := _VRF.contract.UnpackLog(event, "RandomnessRequested", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// VRFTaskResultSubmissionValidatedIterator is returned from FilterTaskResultSubmissionValidated and is used to iterate over the raw logs and unpacked data for TaskResultSubmissionValidated events raised by the VRF contract.
+type VRFTaskResultSubmissionValidatedIterator struct {
+	Event *VRFTaskResultSubmissionValidated // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *VRFTaskResultSubmissionValidatedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(VRFTaskResultSubmissionValidated)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(VRFTaskResultSubmissionValidated)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *VRFTaskResultSubmissionValidatedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *VRFTaskResultSubmissionValidatedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// VRFTaskResultSubmissionValidated represents a TaskResultSubmissionValidated event raised by the VRF contract.
+type VRFTaskResultSubmissionValidated struct {
+	RequestId [32]byte
+	Raw       types.Log // Blockchain specific contextual infos
+}
+
+// FilterTaskResultSubmissionValidated is a free log retrieval operation binding the contract event 0x0d5aeffd61ba930c83f1e88ec8bc110c50d1a38cf03190b0272c312d16ca7140.
+//
+// Solidity: event TaskResultSubmissionValidated(bytes32 indexed requestId)
+func (_VRF *VRFFilterer) FilterTaskResultSubmissionValidated(opts *bind.FilterOpts, requestId [][32]byte) (*VRFTaskResultSubmissionValidatedIterator, error) {
+
+	var requestIdRule []interface{}
+	for _, requestIdItem := range requestId {
+		requestIdRule = append(requestIdRule, requestIdItem)
+	}
+
+	logs, sub, err := _VRF.contract.FilterLogs(opts, "TaskResultSubmissionValidated", requestIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return &VRFTaskResultSubmissionValidatedIterator{contract: _VRF.contract, event: "TaskResultSubmissionValidated", logs: logs, sub: sub}, nil
+}
+
+// WatchTaskResultSubmissionValidated is a free log subscription operation binding the contract event 0x0d5aeffd61ba930c83f1e88ec8bc110c50d1a38cf03190b0272c312d16ca7140.
+//
+// Solidity: event TaskResultSubmissionValidated(bytes32 indexed requestId)
+func (_VRF *VRFFilterer) WatchTaskResultSubmissionValidated(opts *bind.WatchOpts, sink chan<- *VRFTaskResultSubmissionValidated, requestId [][32]byte) (event.Subscription, error) {
+
+	var requestIdRule []interface{}
+	for _, requestIdItem := range requestId {
+		requestIdRule = append(requestIdRule, requestIdItem)
+	}
+
+	logs, sub, err := _VRF.contract.WatchLogs(opts, "TaskResultSubmissionValidated", requestIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(VRFTaskResultSubmissionValidated)
+				if err := _VRF.contract.UnpackLog(event, "TaskResultSubmissionValidated", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseTaskResultSubmissionValidated is a log parse operation binding the contract event 0x0d5aeffd61ba930c83f1e88ec8bc110c50d1a38cf03190b0272c312d16ca7140.
+//
+// Solidity: event TaskResultSubmissionValidated(bytes32 indexed requestId)
+func (_VRF *VRFFilterer) ParseTaskResultSubmissionValidated(log types.Log) (*VRFTaskResultSubmissionValidated, error) {
+	event := new(VRFTaskResultSubmissionValidated)
+	if err := _VRF.contract.UnpackLog(event, "TaskResultSubmissionValidated", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

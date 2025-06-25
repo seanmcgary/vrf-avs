@@ -228,7 +228,7 @@ func (tw *TaskWorker) decodeTaskPayload(payload []byte) (*TaskPayload, error) {
 	}
 	randomnessType := uint8(randomnessTypeField.Uint())
 
-	// Extract RandomnessParams field  
+	// Extract RandomnessParams field
 	randomnessParamsField := structValue.FieldByName("RandomnessParams")
 	if !randomnessParamsField.IsValid() {
 		return nil, errors.New("missing RandomnessParams field")
