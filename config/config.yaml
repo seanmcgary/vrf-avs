@@ -4,7 +4,7 @@ config:
         name: vrf-avs
         version: 0.1.0
         context: devnet
-        project_uuid: 454ce59b-f079-41cb-bc4b-82133206ea1a
-        telemetry_enabled: false
+        project_uuid: "seanmcgary:vrf"
+        telemetry_enabled: true
         templateBaseUrl: https://github.com/Layr-Labs/hourglass-avs-template
         templateVersion: v0.0.13
